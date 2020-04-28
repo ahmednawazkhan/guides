@@ -12,6 +12,8 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
     1. Block ICMP Timestamp and Timestamp Reply
     2. How to setup SNMP
     3. Installing Nvidia drivers in Centos
+    4. Setup and Use VPN Slice to route selected traffic through VPN
+    5. How to disable Ping on Server
 
 3. Docker Files
     1. Postgres with PGAdmin
