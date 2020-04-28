@@ -18,6 +18,9 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
     2. MYSQL with PHPMyAdmin
     3. Moodle with MariaDB
 
+4. Scripts
+    1. Create OTP from Secret Typescript Nodejs
+
 ### Authors
 - Affan Shahid
 - Sohaib Athar
