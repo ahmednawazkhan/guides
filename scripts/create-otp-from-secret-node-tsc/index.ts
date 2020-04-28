@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as otplib from 'otplib';
+const otplib = require('otplib')
 const clipboardy = require('clipboardy');
 
 

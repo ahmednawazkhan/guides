@@ -5,7 +5,7 @@ this script takes in the secret and generates the otp copied to clipbord
 ### Usage
 
 - clone the repo
-- fill in the secret variable
+- fill in the `secret` variable in `index.js`
 - `node index.js`
 
 otp will be copied to clipboard
