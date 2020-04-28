@@ -6,5 +6,5 @@ in `/etc/sysctl.conf` append
 
 then run `sysctl -p`
 
-## Save current firewall changes
+### Save current firewall changes
 `firewall-cmd --runtime-to-permanent`
