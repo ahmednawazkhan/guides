@@ -13,6 +13,12 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
     2. How to setup SNMP
     3. Installing Nvidia drivers in Centos
 
+3. Docker Files
+    1. Postgres with PGAdmin
+    2. MYSQL with PHPMyAdmin
+    3. Moodle with MariaDB
+
 ### Authors
 - Affan Shahid
 - Sohaib Athar
+- Rameez Hussain
