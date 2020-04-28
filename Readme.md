@@ -8,5 +8,11 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
     1. SSL configuration for Nginx ( ciphers, version)
     2. Set HTTPOnly Cookie
 
-2. Centos
+2. Linux
     1. Block ICMP Timestamp and Timestamp Reply
+    2. How to setup SNMP
+    3. Installing Nvidia drivers in Centos
+
+### Authors
+- Affan Shahid
+- Sohaib Athar
