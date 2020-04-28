@@ -1,0 +1,21 @@
+{
+  "name": "create-otp",
+  "version": "1.0.0",
+  "description": "generates otp and copies to clipboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "clipboardy": "^2.1.0",
+    "otplib": "^11.0.1"
+  },
+  "bin": {
+    "afotp": "./index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.37"
+  }
+}
