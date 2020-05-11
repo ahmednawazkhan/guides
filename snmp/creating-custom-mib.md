@@ -74,7 +74,7 @@ __The module name and file name should be same to ensure that the SNMP parser ca
 
 __Please read the book *Essential SNMP 2nd Edition* to under stand *SMI* and *MIB* structures__
 
-lets verify that using snmptranslate  that doesn't yet know about this node
+lets verify using `snmptranslate` that doesn't yet know about this node
 
 `snmptranslate -IR -On oversightInteger` 
 
@@ -91,7 +91,7 @@ i got the output
 
 `.1.3.6.1.4.1.53864.1.1`
 
-snmptranslate is just the parser. The mib file is not yet loaded. to load the mib file every time `snmpd` starts, add 
+`snmptranslate` is just the parser. The mib file is not yet loaded. To load the mib file every time `snmpd` starts, add 
 
 `+mibs +GET-LATEST-SIGNALS-MIB`
 
@@ -243,7 +243,9 @@ We are getting a few errors because our script output does not match our MIB whi
 
 `Life, the Universe, and Everything` 
 
-which is coming from our script
+which is coming from our script. You can see certain useful logs on the terminal where `snmpd` is running in the debug mode
+
+__if you face any problem try the command `setenforce 0`__
 
 ### Useful Links
 
