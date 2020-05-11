@@ -72,6 +72,16 @@ END
 
 __The module name and file name should be same to ensure that the SNMP parser can find the dependent MIB__
 
+In order to validate the MIB structure install `libsmi`. On Centos
+
+`yum install libsmi`
+
+It will provide you with a tool called `smilint`
+
+Check the Mib file using command
+
+`smilint /usr/share/snmp/mibs/GET-LATEST-SIGNALS-MIB.txt`
+
 __Please read the book *Essential SNMP 2nd Edition* to under stand *SMI* and *MIB* structures__
 
 lets verify using `snmptranslate` that doesn't yet know about this node
