@@ -72,10 +72,15 @@ END
 
 __The module name and file name should be same to ensure that the SNMP parser can find the dependent MIB__
 
+__Please read the book *Essential SNMP 2nd Edition* to under stand *SMI* and *MIB* structures__
 
 lets verify that using snmptranslate  that doesn't yet know about this node
 
-`snmptranslate -IR -On oversightInteger Unknown object identifier: oversightInteger`
+`snmptranslate -IR -On oversightInteger` 
+
+output 
+
+`Unknown object identifier: oversightInteger`
 
 
 then lets do
@@ -216,8 +221,31 @@ once everything is done, start snmpd in debug mode in foreground as
 
 `snmpd -f -Lo -Ducd-snmp/pass`.
 
+execute the command 
+
+`snmpwalk -v2c localhost -c public .1.3.6.1.4.1.53864`
+
+you should see
+
+```
+GET-LATEST-SIGNALS-MIB::oversightInteger.1.0 = STRING: "Life, the Universe, and Everything"
+GET-LATEST-SIGNALS-MIB::oversightInteger.2.1.2.1 = Wrong Type (should be OCTET STRING): INTEGER: 42
+GET-LATEST-SIGNALS-MIB::oversightInteger.2.1.3.1 = Wrong Type (should be OCTET STRING): OID: GET-LATEST-SIGNALS-MIB::oversightInteger.99
+GET-LATEST-SIGNALS-MIB::oversightInteger.3.0 = Wrong Type (should be OCTET STRING): Timeticks: (363136200) 42 days, 0:42:42.00
+GET-LATEST-SIGNALS-MIB::oversightInteger.4.0 = Wrong Type (should be OCTET STRING): IpAddress: 127.0.0.1
+GET-LATEST-SIGNALS-MIB::oversightInteger.5.0 = Wrong Type (should be OCTET STRING): Counter32: 42
+GET-LATEST-SIGNALS-MIB::oversightInteger.6.0 = Wrong Type (should be OCTET STRING): Gauge32: 42
+
+```
 
 
+We are getting a few errors because our script output does not match our MIB which can be tailored anytime. The value we are interested in is 
+
+`Life, the Universe, and Everything` 
+
+which is coming from our script
+
+### Useful Links
 
 if you want to know the difference between `pass`, `extend`, `exec`, `sh`, `pass_persist` have a look at
 http://net-snmp.sourceforge.net/wiki/index.php/FAQ:Agent_07
