@@ -10,10 +10,9 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
 
 2. Linux
     1. Block ICMP Timestamp and Timestamp Reply
-    2. How to setup SNMP
-    3. Installing Nvidia drivers in Centos
-    4. Setup and Use VPN Slice to route selected traffic through VPN
-    5. How to disable Ping on Server
+    2. Installing Nvidia drivers in Centos
+    3. Setup and Use VPN Slice to route selected traffic through VPN
+    4. How to disable Ping on Server
 
 3. Docker Files
     1. Postgres with PGAdmin
@@ -23,6 +22,10 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
 
 4. Scripts
     1. Create OTP from Secret Typescript Nodejs
+
+5. SNMP
+    1. How to setup SNMP
+    2. How to Extend an Agent with Custom MIB, Custom Script, Custom Enterprise OID
 
 ### Authors
 - Affan Shahid
