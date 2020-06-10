@@ -102,7 +102,7 @@ i got the output
 
 `snmptranslate` is just the parser. The mib file is not yet loaded. To load the mib file every time `snmpd` starts, add
 
-`+mibs +GET-LATEST-SIGNALS-MIB`
+`mibs +GET-LATEST-SIGNALS-MIB`
 
 to your `/etc/snmp/snmp.conf`
 
