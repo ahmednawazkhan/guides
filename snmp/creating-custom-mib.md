@@ -109,6 +109,7 @@ to your `/etc/snmp/snmp.conf`
 
 __Note that the value for this variable is the name of the MIB module, *not* the name of the MIB file.__
 
+## Method 1 (Pass Protocol)
 
 In order to add new functionality to an SNMP agent the agent must be extended. If you're using Net-SNMP, there are a few options including compiling new source code into the agent, using a sub-agent, and using external scripts via pass and pass-persist protocol. Take a look at:
 
@@ -256,6 +257,118 @@ We are getting a few errors because our script output does not match our MIB whi
 which is coming from our script. You can see certain useful logs on the terminal where `snmpd` is running in the debug mode
 
 __if you face any problem try the command `setenforce 0`__
+## Method 2 (Dynnamic Object Loading)
+Writing modules for MIBs is a long and sometimes troublesome process, much like writing a parser. And just like writing a parser, you don't have to do everything by hand: MIBs can already be processed by computers pretty well, so there is no need to start from square one every time. The tool to convert an existing MIB to some C code is called mib2c and is part of the Net-SNMP distribution
+As now we are familiar with creation of mib file lets practice it. Let us create a new MIB file with an custom OID which will return a static string '6.1.1'. So our MIB file looks like this:
+```
+MY-COMPANY-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+MODULE-IDENTITY, OBJECT-TYPE, enterprises, Integer32 FROM SNMPv2-SMI;
+
+-- root of our MIB will point to enterprises
+
+myCompanyMIB MODULE-IDENTITY
+LAST-UPDATED
+"202005100000Z"
+ORGANIZATION
+"AFINITI"
+CONTACT-INFO
+"email: support@afiniti.com"
+DESCRIPTION
+"Custom Example MIB"
+REVISION
+"202005100000Z"
+DESCRIPTION
+"First and hopefully not the final revision"
+::= { enterprises 53864 }
+
+-- lets group all scalarValues in one node of our MIB
+
+scalarValues OBJECT IDENTIFIER ::= { myCompanyMIB 1 }
+
+-- time to define scalar values
+
+hostVersionString OBJECT-TYPE
+SYNTAX OCTET STRING
+MAX-ACCESS read-only
+STATUS current
+DESCRIPTION
+"Static string software Version"
+::= { scalarValues 1 }
+
+END
+
+```
+
+Now run the following command in the same folder
+```bash
+$ mib2c scalarValues
+```
+
+Afterwards, you will be asked for some options to select. First select "Net-SNMP style code" which is option "2" and then select "If you're writing code for some generic scalars" i.e option "1". 
+
+After Successfully completing the above steps, it will generate two files in the same directory scalarValues.c and scalarValues.h. We will be writing all our code in scalarValues.c. We need to implement our driver functions and bind the values to scalar objects in the handler.
+
+As we need to just bind the static string '6.1.1', Our handler code will look like this:
+
+```c
+int
+handle_hostVersionString(netsnmp_mib_handler *handler,
+                          netsnmp_handler_registration *reginfo,
+                          netsnmp_agent_request_info   *reqinfo,
+                          netsnmp_request_info         *requests)
+{
+    /* We are never called for a GETNEXT if it's registered as a
+       "instance", as it's "magically" handled for us.  */
+
+    /* a instance handler also only hands us one request at a time, so
+       we don't need to loop over a list of requests; we'll only get one. */
+    strcpy(softwareVersion, "6.1.1");
+    switch(reqinfo->mode) {
+
+        case MODE_GET:
+            snmp_set_var_typed_value(requests->requestvb, ASN_OCTET_STR,
+                                    (u_char*) &softwareVersion,
+                                     strlen(softwareVersion));
+            break;
+
+
+        default:
+            /* we should never get here, so this is a really bad error */
+            snmp_log(LOG_ERR, "unknown mode (%d) in handle_hostVersionString\n", reqinfo->mode );
+            return SNMP_ERR_GENERR;
+    }
+
+    return SNMP_ERR_NOERROR;
+}
+```
+
+So we are almsot done, we need to compile the C code and place the dynamic loaded object in `/usr/lib` folder so our daemon can load  our library when it  starts. To do that run the following commands:
+```bash
+$ gcc -shared -fPIC scalarValues.c -o libSnmpHandler.so 
+$ sudo cp libSnmpHandler.so /usr/lib
+```
+
+Lets restart net-snmp daemon with following command and Try things out:
+```
+$ sudo /etc/init.d/snmpd restart
+```
+
+It's time to verify the things, lets call the snmpget command on our custom OID's:
+```bash
+snmpget -v 2c -c public localhost  1.3.6.1.4.1.53864.1.1.0
+```
+
+&nbsp;&nbsp;&nbsp;**Output:**
+```bash
+SNMPv2-SMI::enterprises.53864.1.1.0 = STRING: "6.1.1"
+```
+
+Hurray, We have finally made a custom snmp agent handling custom OIDs with Dynamically Loadable Objects.
+
+
+
 
 ### Useful Links
 
