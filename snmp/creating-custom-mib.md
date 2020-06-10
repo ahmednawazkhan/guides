@@ -1,6 +1,6 @@
 ## Extending the SNMP Agent. Custom Script, Custom MIB, Custom Enterprise OID
 
-*please install snmp agent using the guide **snmp-setup** in the same folder*
+_please install snmp agent using the guide **snmp-setup** in the same folder_
 
 ## Creating a MIB
 
@@ -8,20 +8,20 @@
 
 When you use snmpget, an SNMP request is made via IP to an SNMP agent on a remote (or local) host to return a specific piece of data. A MIB is used to describe in human readable terms, what that data is and where to find it. On the other hand, `snmptranslate` is a tool used to parse a given MIB. It parses a local MIB file, and doesn't make any contact with an agent.
 
-
 execute following command to see where the mibs are hosted
 
 `net-snmp-config --default-mibdirs`
 
-my output was 
+my output was
+
 ```
 /root/.snmp/mibs:/usr/share/snmp/mibs
 
 ```
 
-Lets create our first mib 
+Lets create our first mib
 
-inside `/usr/share/snmp/mibs` folder create a file named `GET-LATEST-SIGNALS-MIB.txt` and add following content to it 
+inside `/usr/share/snmp/mibs` folder create a file named `GET-LATEST-SIGNALS-MIB.txt` and add following content to it
 
 ```
 
@@ -34,7 +34,7 @@ IMPORTS
 signalsInfo MODULE-IDENTITY
     LAST-UPDATED "202005100000Z"
     ORGANIZATION "Afiniti, Inc"
-    CONTACT-INFO    
+    CONTACT-INFO
          "postal:   Ahmed @ afiniti
 
           email:    ahmed.nawazkhan@afiniti.com"
@@ -70,7 +70,7 @@ oversightInteger OBJECT-TYPE
 END
 ```
 
-__The module name and file name should be same to ensure that the SNMP parser can find the dependent MIB__
+**The module name and file name should be same to ensure that the SNMP parser can find the dependent MIB**
 
 In order to validate the MIB structure install `libsmi`. On Centos
 
@@ -82,16 +82,15 @@ Check the Mib file using command
 
 `smilint /usr/share/snmp/mibs/GET-LATEST-SIGNALS-MIB.txt`
 
-__Please read the book *Essential SNMP 2nd Edition* to under stand *SMI* and *MIB* structures__
+**Please read the book _Essential SNMP 2nd Edition_ to under stand _SMI_ and _MIB_ structures**
 
 lets verify using `snmptranslate` that doesn't yet know about this node
 
-`snmptranslate -IR -On oversightInteger` 
+`snmptranslate -IR -On oversightInteger`
 
-output 
+output
 
 `Unknown object identifier: oversightInteger`
-
 
 then lets do
 
@@ -101,13 +100,13 @@ i got the output
 
 `.1.3.6.1.4.1.53864.1.1`
 
-`snmptranslate` is just the parser. The mib file is not yet loaded. To load the mib file every time `snmpd` starts, add 
+`snmptranslate` is just the parser. The mib file is not yet loaded. To load the mib file every time `snmpd` starts, add
 
 `+mibs +GET-LATEST-SIGNALS-MIB`
 
 to your `/etc/snmp/snmp.conf`
 
-__Note that the value for this variable is the name of the MIB module, *not* the name of the MIB file.__
+**Note that the value for this variable is the name of the MIB module, _not_ the name of the MIB file.**
 
 ## Method 1 (Pass Protocol)
 
@@ -115,10 +114,9 @@ In order to add new functionality to an SNMP agent the agent must be extended. I
 
 https://vincent.bernat.ch/en/blog/2012-extending-netsnmp
 
-
 we will be using the `pass` protocol
 
-Let us create our first script. Create `/etc/snmp/exampleScript.sh` and add the following content to it 
+Let us create our first script. Create `/etc/snmp/exampleScript.sh` and add the following content to it
 
 ```
 
@@ -131,7 +129,7 @@ REQ="$2"    # Requested OID
 #  Process SET requests by simply logging the assigned value
 #      Note that such "assignments" are not persistent,
 #      nor is the syntax or requested value validated
-#  
+#
 if [ "$1" = "-s" ]; then
   echo $* >> /tmp/passtest.log
   exit 0
@@ -212,7 +210,7 @@ add the following line to `snmpd.conf`
 
 `pass .1.3.6.1.4.1.53864.1.1 /bin/sh /etc/snmp/exampleScript.sh`
 
-Now my `snmpd.conf` is 
+Now my `snmpd.conf` is
 
 ```
 
@@ -228,11 +226,11 @@ pass .1.3.6.1.4.1.53864.1.1 /bin/sh /etc/snmp/exampleScript.sh
 
 ```
 
-once everything is done, start snmpd in debug mode in foreground as 
+once everything is done, start snmpd in debug mode in foreground as
 
 `snmpd -f -Lo -Ducd-snmp/pass`.
 
-execute the command 
+execute the command
 
 `snmpwalk -v2c localhost -c public .1.3.6.1.4.1.53864`
 
@@ -249,17 +247,19 @@ GET-LATEST-SIGNALS-MIB::oversightInteger.6.0 = Wrong Type (should be OCTET STRIN
 
 ```
 
+We are getting a few errors because our script output does not match our MIB which can be tailored anytime. The value we are interested in is
 
-We are getting a few errors because our script output does not match our MIB which can be tailored anytime. The value we are interested in is 
-
-`Life, the Universe, and Everything` 
+`Life, the Universe, and Everything`
 
 which is coming from our script. You can see certain useful logs on the terminal where `snmpd` is running in the debug mode
 
-__if you face any problem try the command `setenforce 0`__
+**if you face any problem try the command `setenforce 0`**
+
 ## Method 2 (Dynnamic Object Loading)
+
 Writing modules for MIBs is a long and sometimes troublesome process, much like writing a parser. And just like writing a parser, you don't have to do everything by hand: MIBs can already be processed by computers pretty well, so there is no need to start from square one every time. The tool to convert an existing MIB to some C code is called mib2c and is part of the Net-SNMP distribution
 As now we are familiar with creation of mib file lets practice it. Let us create a new MIB file with an custom OID which will return a static string '6.1.1'. So our MIB file looks like this:
+
 ```
 MY-COMPANY-MIB DEFINITIONS ::= BEGIN
 
@@ -302,11 +302,12 @@ END
 ```
 
 Now run the following command in the same folder
+
 ```bash
 $ mib2c scalarValues
 ```
 
-Afterwards, you will be asked for some options to select. First select "Net-SNMP style code" which is option "2" and then select "If you're writing code for some generic scalars" i.e option "1". 
+Afterwards, you will be asked for some options to select. First select "Net-SNMP style code" which is option "2" and then select "If you're writing code for some generic scalars" i.e option "1".
 
 After Successfully completing the above steps, it will generate two files in the same directory scalarValues.c and scalarValues.h. We will be writing all our code in scalarValues.c. We need to implement our driver functions and bind the values to scalar objects in the handler.
 
@@ -344,37 +345,126 @@ handle_hostVersionString(netsnmp_mib_handler *handler,
 }
 ```
 
-So we are almsot done, we need to compile the C code and place the dynamic loaded object in `/usr/lib` folder so our daemon can load  our library when it  starts. To do that run the following commands:
+So we are almsot done, we need to compile the C code and place the dynamic loaded object in `/usr/lib` folder so our daemon can load our library when it starts. To do that run the following commands:
+
 ```bash
-$ gcc -shared -fPIC scalarValues.c -o libSnmpHandler.so 
+$ gcc -shared -fPIC scalarValues.c -o libSnmpHandler.so
 $ sudo cp libSnmpHandler.so /usr/lib
 ```
 
 Lets restart net-snmp daemon with following command and Try things out:
+
 ```
 $ sudo /etc/init.d/snmpd restart
 ```
 
 It's time to verify the things, lets call the snmpget command on our custom OID's:
+
 ```bash
 snmpget -v 2c -c public localhost  1.3.6.1.4.1.53864.1.1.0
 ```
 
 &nbsp;&nbsp;&nbsp;**Output:**
+
 ```bash
 SNMPv2-SMI::enterprises.53864.1.1.0 = STRING: "6.1.1"
 ```
 
 Hurray, We have finally made a custom snmp agent handling custom OIDs with Dynamically Loadable Objects.
 
+## Method 3 (Using AgentX Protocol)
 
+## What is AgentX Protocol?
 
+The Agent Extensibility Protocol or AgentX is a computer networking protocol that allows management of Simple Network Management Protocol objects defined by different processes via a single master agent. Agents that export objects via AgentX to a master agent are called **subagents**.
+So essentially, AgentX protocol allows a **master agent** to be extended by individual **subagents**.
+
+Some of the benefits that AgentX has over other methods are:
+
+1. No configuration is needed for the master agent to accept an additional sub-agent. A sub-agent registers to the master agent the MIB modules (or part of them) it wants to take care of.
+2. A sub-agent is decoupled from the master agent. It can run with a different identity or be integrated into another daemon to export its internal metrics, send traps or allow remote configuration through SNMP.
+3. AgentX protocol can be carried over TCP. Sub-agents can therefore run on a foreign host as well.
+
+## Steps for making a master-agent
+
+1. In order to make the NET-SNMP agent as a master agent, all you need to do is to **add** the following in your **snmpd.conf** file. The following tells the agent to open a TCP port at 705 for other sub-agents to connect to.
+
+```bash
+master agentx
+agentXSocket    tcp:localhost:705
+```
+
+2. For these changes to take affect, you need to restart the snmpd service by executing the following in bash.
+
+```
+sudo service snmpd restart
+```
+
+## Steps for making a sub-agent
+
+In order to make a sub-agent, you can choose any language of choice with relevant support to make a sub-agent. For the sake of this example, I'll be using JavaScript. I will be using [node-net-snmp](https://github.com/markabrahams/node-net-snmp) library through which we can create a sub-agent.
+
+1. Create an app.js file and paste in the following content. Make sure you install **net-snmp** via npm. The following code exposes an OID of **1.3.6.1.4.1.53864.1.1.1** which is a scalar having the software version **6.1.1**.
+
+```js
+const snmp = require('net-snmp');
+
+// Default options
+const options = {
+  master: 'localhost',
+  masterPort: 705,
+  description: 'Node net-snmp AgentX sub-agent'
+};
+
+const agent = snmp.createSubagent(options);
+const mib = agent.getMib();
+
+const softwareVersionProvider = {
+  name: 'softwareVersion',
+  type: snmp.MibProviderType.Scalar,
+  oid: '1.3.6.1.4.1.53864.1.1.1',
+  scalarType: snmp.ObjectType.OctetString,
+  handler: function (mibRequest) {
+    mibRequest.done();
+  }
+};
+
+agent.open(function (error, data) {
+  console.log('Successfully connected to master with PDU', data);
+  if (error) {
+    console.error(error);
+  } else {
+    agent.registerProvider(softwareVersionProvider, null);
+    agent.getMib().setScalarValue('softwareVersion', '6.1.1');
+    console.info(new Date(), 'SNMP sub-Agent is up and running..');
+  }
+});
+```
+
+2. Run the above code by node as follows. This will attach the sub-agent to master-agent at TCP port 705.
+
+```bash
+sudo node app.js
+```
+
+3. After this you can issue get request against this OID using **snmpget** as follows:
+
+```bash
+snmpget -v 2c -c public localhost 1.3.6.1.4.1.53864.1.1.1.0
+```
+
+&nbsp;&nbsp;&nbsp;You should get the following as an output on bash.
+
+```
+SNMPv2-SMI::enterprises.53864.1.1.1.0 = STRING: "6.1.1"
+```
+
+There you go, simple as that! You now have a sub-agent handling a custom OID which is connected to a NET-SNMP master agent.
 
 ### Useful Links
 
 if you want to know the difference between `pass`, `extend`, `exec`, `sh`, `pass_persist` have a look at
 http://net-snmp.sourceforge.net/wiki/index.php/FAQ:Agent_07
-
 
 FAQs http://www.net-snmp.org/FAQ.html#How_do_I_add_a_MIB_
 
