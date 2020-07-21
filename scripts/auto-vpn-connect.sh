@@ -1,6 +1,8 @@
 #! /bin/sh
 
-# install openconnect and vpn-slice. Enter your password, username and secret key ( generated from QR code ) and list of all the ip-address you wish to make vpn tunnel for. start this script on OS startup
+# install openconnect and vpn-slice. Enter your password, username and secret key 
+#( generated from QR code ), Auth Group (AFINITI_VPN in this case) and list of all 
+#the ip-address you wish to make vpn tunnel for. start this script on OS startup
 
 VPN="vpnlhr.afiniti.com"
 
