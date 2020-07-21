@@ -66,10 +66,10 @@ Docker images are stored in image registries. The most common registry is
 Docker Hub (https://hub.docker.com). Here is a structure of a common registry. ![Docker Hub as a Registry](registry.png)
 
 ### Images with multiple tags
-docker image pull -a <repository-name>
+`docker image pull -a <repository-name>`
 
 ### Inspecting an Image details ( layers )
-docker image inspect ubuntu:latest
+`docker image inspect ubuntu:latest`
 
 ### Sharing image layers
 Multiple images can, and do, share layers. This leads to efficiencies in space and

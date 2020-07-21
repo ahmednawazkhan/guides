@@ -14,14 +14,18 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
     3. Setup and Use VPN Slice to route selected traffic through VPN
     4. How to disable Ping on Server
 
-3. Docker Files
-    1. Postgres with PGAdmin
-    2. MYSQL with PHPMyAdmin
-    3. Moodle with MariaDB
-    4. Limesurvey with MYSQL database
+3. Docker
+    1. Docker Files
+        1. Postgres with PGAdmin
+        2. MYSQL with PHPMyAdmin
+        3. Moodle with MariaDB
+        4. Limesurvey with MYSQL database
+        5. MongoDB with Mongo Express
+    2. Docker Tutorial
 
 4. Scripts
     1. Create OTP from Secret Typescript Nodejs
+    2. Auto vpn connect for various URLs on computer startup
 
 5. SNMP
     1. How to setup SNMP
