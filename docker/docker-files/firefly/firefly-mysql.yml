@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+  fireflyiii:
+    image: jc5x/firefly-iii:latest
+    volumes:
+      - firefly_iii_upload:/var/www/html/storage/upload
+    env_file: .env
+    ports:
+      - 8081:8080
+    depends_on:
+      - fireflyiiidb
+  fireflyiiidb:
+    image: mysql:8
+    container_name: fireflyiiidb
+    environment:
+      MYSQL_DATABASE: fireflyiiidb
+      MYSQL_USER: fireflyiiidb
+      MYSQL_PASSWORD: fireflyiiidb
+      MYSQL_RANDOM_ROOT_PASSWORD: 'true'
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - firefly_iii_db:/var/lib/mysql
+volumes:
+   firefly_iii_upload:
+   firefly_iii_db:
