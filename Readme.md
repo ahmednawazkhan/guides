@@ -22,6 +22,7 @@ This repository helps me reproduce small tasks ( operating system tasks, nginx t
         3. Moodle with MariaDB
         4. Limesurvey with MYSQL database
         5. MongoDB with Mongo Express
+        6. Firefly iii with Mysql 8
     2. Docker Tutorial
 
 4. Scripts
