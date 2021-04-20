@@ -68,3 +68,5 @@ In my case it was `libinput Accel Speed (324):	-1.000000` with id `324`
 4. In my case the sensitivity was low. I tweaked the value to `-0.5` to increase sensitivity
 
 `xinput --set-prop 16 324 -0.5`
+
+5. These changes are not permanent and will be gone after system reboot. One thing you can do is go to `Startup Applications` and add this script with some initial delay (10s may be) to execute this command on startup
