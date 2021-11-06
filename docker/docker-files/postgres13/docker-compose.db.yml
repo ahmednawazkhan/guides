@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - energy-backend-network
+
+volumes:
+  postgres:
+    name: nest-db
+
+networks:
+  energy-backend-network:
+    name: energy-backend
